@@ -3,6 +3,13 @@
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import axios from "axios";
+import fileDownload from "js-file-download";
+
+export const config = {
+    api: {
+      bodyParser: false,
+    },
+  };
 
 
 export default function download() {
@@ -17,16 +24,33 @@ export default function download() {
         setgrpname(e.target.value);
     }
 
-    const download = (e)=>{
+    const download = async(e)=>{
+        try {
+            const downloadFile = await axios.get(
+            "/api/file/download",
+            {
+                responseType: "blob",
+                params:{
+                    fileid:e,
+                    groupname:grpname,
+                }
+            }
+            );
+            fileDownload(downloadFile.data, downloadFile.headers.name);
+      } catch (error) {
+        console.log(error);
+        setErrorStatus(true);
+        setErrorMessage("Error downloading files.");
+      }
 
     }
 
     const getfiles = async()=>{
         try{
             console.log("/api/getfiles/");
-            const res = await axios.get("/api/getfiles/"+grpname);
-            setfiles(res.data.files);
-            console.log("files ",files);
+            const res = await axios.post("/api/getfiles/"+grpname);
+            setfiles(res.data);
+            console.log("!files ",res);
         }catch(error){
             console.log("cant get files ",err);
         }
@@ -34,6 +58,7 @@ export default function download() {
     }
     
     console.log(grpname);
+    console.log("files ",files);
     
     if(session.status==="unauthenticated"){
         return(<div>pls authenticate</div>)
@@ -46,7 +71,16 @@ export default function download() {
         <label for="grpname">Enter Group Name</label>
         <input type="text" id="grpname" onChange={handlechange}/>
         <button type="submit" onClick={()=>getfiles()}>Get Files</button>
-        <button type="submit" onClick={()=>download()}>Download</button>
+        <div>
+            {Array.isArray(files)&&files.map((file)=>(
+                // return(
+                    <div>
+                        <h1>{file.name}</h1>
+                        <button type="submit" onClick={()=>download(file.id)}>Download</button>
+                    </div>
+                // );
+            ))}
+        </div>
     </div>
     )}
   

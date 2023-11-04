@@ -10,7 +10,7 @@ import { connect } from "@/dbConfig/dbConfig";
 
 const secret = process.env.SECRET;
 
-export const GET =async(req,res)=>{
+export const POST =async(req,res)=>{
 
     await connect();
     const session = await getServerSession();
@@ -22,26 +22,26 @@ export const GET =async(req,res)=>{
     console.log("folerid ",group.folderId);
     
     try{
-      const res = await axios.get(
-        `https://www.googleapis.com/drive/v3/files`,{
-          
-            q: `'${group.folderId}' in parents`,
-          
-        },
+      const res1 = await axios.get(
+        `https://www.googleapis.com/drive/v3/files?q='${group.folderId}' in parents`,
         {
             headers:{
-                authorization: `Bearer ${user.access_token}`,
+                Authorization: `Bearer ${user.access_token}`,
+                "Content-Type":'application/json',
                 Accept:'application/json',
+
             },
         }
 
       )
-      console.log("res ",res);
-      res.status(200).json({ name: group.name, files: res.data.files });
+      console.log("res ",res1.data.files);
+      // res.status(200).json({files:res1.data.files});
+      return Response.json(res1.data.files);
     }catch(error){
       console.log("error occured ",error);
+      // res.status(401);
     }
-
+    // res.end();
 
     return Response.json("ok")
 
