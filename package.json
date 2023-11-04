@@ -1,0 +1,38 @@
+{
+  "name": "tempapp",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@auth/prisma-adapter": "^1.0.5",
+    "@prisma/client": "^5.5.2",
+    "axios": "^1.6.0",
+    "crypto-js": "^4.2.0",
+    "express-async-handler": "^1.2.0",
+    "express-formidable": "^1.2.0",
+    "form-data": "^4.0.0",
+    "formidable": "^3.5.1",
+    "fs": "^0.0.1-security",
+    "googleapis": "^128.0.0",
+    "hybrid-crypto-js": "^0.2.4",
+    "iron-session": "^6.3.1",
+    "mongodb": "^6.2.0",
+    "mongoose": "^8.0.0",
+    "multer": "^1.4.5-lts.1",
+    "next": "^14.0.0",
+    "next-auth": "^4.24.4",
+    "node-forge": "^1.3.1",
+    "prisma": "^5.5.2",
+    "react": "^18",
+    "react-dom": "^18"
+  },
+  "devDependencies": {
+    "eslint": "^8",
+    "eslint-config-next": "14.0.1"
+  }
+}
