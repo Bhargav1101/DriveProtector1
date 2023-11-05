@@ -34,6 +34,7 @@ function approach() {
   return (
     <>
     <Navbar/>
+    
     <div className="approach-container">
       <h1 className="page-title">Our Project Approach</h1>
       <div className="approach-steps">

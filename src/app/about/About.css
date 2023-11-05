@@ -19,6 +19,7 @@
     height: auto;
     margin-bottom: 10px;
     border: double 6px whitesmoke;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
   
   .developers-section {
@@ -29,6 +30,7 @@
   
   .developer-list {
     list-style: none;
+    display: flex;
     padding: 0;
   }
   
@@ -42,8 +44,15 @@
     padding: 10px;
     margin: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.1s ease;
   }
   
+  .developer:hover{
+    background-color:gold;
+    transform: translateY(-5px);
+
+  }
+
   .developer h3 {
     color: #424e6b;
     font-size: 20px;

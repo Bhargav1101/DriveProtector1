@@ -50,12 +50,7 @@ export default function Group() {
             email:session.data.user.email
         });
         setusers(res.data);
-        // (res.data).map((i1,ind)=>{
-        //     <li key={ind}>
-        //     {i1}
-        //     <button onClick={()=>deleteuser(i,i1)}>delete</button>
-        //     </li>
-        // })
+       
         console.log(res.data);
     }
     async function adduser(i){
@@ -84,18 +79,7 @@ export default function Group() {
         })
         console.log("!",res.data);
         setgrps(res.data);
-        // mapgrps=(res.data).map((i,ind)=>{
-        //     <li key={ind}>
-        //         {i}
-        //         <button onClick={()=>showusers(i)}>showusers</button>
-        //         <input type='email' placeholder="email to add" onChange={e=>setEmail(e.target.value)}/>
-        //         <button onClick={()=>adduser(i)}>add user</button>
-        //         <input type="file"placeholder="add filename" onChange={e=>setFile(e.target.files[0])}/>
-        //         <button onClick={()=>addfile(i)}>Add file</button>
-        //         <button onClick={()=>showfiles(i)}>show files</button>
-        //         <button onClick={()=>deletegrp(i)}>delete</button>
-        //         </li>
-        // });
+        
         console.log("!!",grps)
     }
     if(session.status==="unauthenticated"){
@@ -132,16 +116,12 @@ export default function Group() {
                     <a className="go-to-group-button" href={name}>Go</a>
                     <button onClick={()=>deletegrp(name)}>delete</button>
                     <button onClick={()=>showusers(name)}>showusers</button>
-                    {/* {Array.isArray(users)&&users.map((email,i)=>(
-                        <li id={i}>
-                            <h1>{email}</h1>
-                        </li>
-                    ))} */}
+                  
                     <input type='email' placeholder="email to add" onChange={e=>setEmail(e.target.value)}/>
                     <button onClick={()=>adduser(name)}>add user</button>
                     </div>
                    
-                    {/* <input type="file"placeholder="add filename" onChange={e=>setFile(e.target.files[0])}/> */}
+                    
                     </li>
                 ))}  
                 </ul> 

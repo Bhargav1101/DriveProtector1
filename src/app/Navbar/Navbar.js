@@ -1,13 +1,14 @@
 "use client"
 import React from 'react';
 import { useState } from "react";
-import { Link } from 'react-router-dom'; // If you're using React Router
+// import { Link } from 'react-router-dom'; 
 import './Navbar.css';
 import { useSession, signIn, signOut } from "next-auth/react"
 import { useRouter } from "next/navigation";
 import logo from "../../../public/logo.png";
-import { BrowserRouter,Routes,Route } from 'react-router-dom';
+// import { BrowserRouter,Routes,Route } from 'react-router-dom';
 import axios from "axios";
+// import axios from "axios";
 import Image from 'next/image';
 import styles from "../Home/Home.css";
 import About from "../about/page.js"
