@@ -11,7 +11,8 @@ export const POST=async(req)=>{
     try{
         await connect();
         const grpexist=await Group.findOne({name:request.name});
-        if(grpexist===null){
+        
+        if(grpexist===null || !grpexist.userEmails.includes(request.owner)){
             throw new Error("grp doesnt exists")
         }
         const user=await User.findOne({email:request.email});
@@ -21,7 +22,7 @@ export const POST=async(req)=>{
 
 
         const perms = await axios.get(
-            `https://www.googleapis.com/drive/v3/files/${grpexist.folderId}/permissions?fields=permission` ,
+            `https://www.googleapis.com/drive/v3/files/${grpexist.folderId}/permissions` ,
             {
                 headers:{
                     Authorization:`Bearer ${user.access_token}`, 
@@ -29,7 +30,6 @@ export const POST=async(req)=>{
                     Accept:'application/json',
                 }
             });
-    
           const permsUser = perms.data.permissions.find((perms) => {
             return perms.emailAddress === req.email;
           });
@@ -44,27 +44,22 @@ export const POST=async(req)=>{
                 }
             }
           );
-          function notuser(id){
-            return id!=user.id;
-          }
-          const updatedids=grpexist.userIds.filter(notuser);
+          
           function notuseremail(userEmails){
             return userEmails!=user.email;
           }
           const updatedEmails=grpexist.userEmails.filter(notuseremail);
 
-          await Group.findOneAndUpdate({name:request.name},{userIds:updatedids,userEmails:updatedEmails});
-          
-          function notgrp(id,key){
-              return id!=grpexist._id;
-            }
-        const updatedkeys=user.groupprikeys.filter(notgrp);
-          await User.updateOne({email:request.email},{groupprikeys:updatedkeys});
+          await Group.findOneAndUpdate({name:request.name},{userEmails:updatedEmails});
+         
+        console.log(grpexist.name);
+        let updatedkeys= user.groupprikeys.filter(({id,key})=>{return id!==grpexist.name})
+        await User.updateOne({email:request.email},{groupprikeys:updatedkeys});
             
     }
     catch(e){
         console.log(e)
-        return Response.json('err',{status:500})
+        return Response.json(e,{status:500})
     }
     return Response.json('ok');
     

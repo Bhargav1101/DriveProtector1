@@ -20,7 +20,7 @@ export const POST=async(req)=>{
         if(grpexist){
             throw new Error("grp exists")
         }
-        const user=await User.findOne({email:request.ownerEmail});
+        const user=await User.findOne({email:request.email});
         console.log(user);
         const folder= await axios.post(`https:www.googleapis.com/drive/v3/files?access_token=${user.access_token}`,
             {
@@ -35,38 +35,28 @@ export const POST=async(req)=>{
                     Accept:'application/json',
                 }
             })
+            
             rsa.generateKeyPair(async function (keyPair){
               
-                // const pk = keyPair.publicKey.split('\n');
-                // pk.shift();pk.pop();pk.pop();
-                // const mpk  =pk.join('\n');
+                
   
                 // console.log("public key ",mpk);
                 
-                // const grppublickey=keyPair.publickey;
-                console.log("Grp Private key ",keyPair.privateKey);
-                const bytes = aes.decrypt(
-                    user.encryptedprivatekey.toString(),
-                    process.env.NEXTAUTH_SECRET
-                  );
-          
-                  console.log("bytes ",bytes);
-                  const decryptedUserPrivateKey = bytes.toString(Latin1);
-                console.log("decrypted user private key ",decryptedUserPrivateKey); 
-                const grpprivatekey=aes.encrypt(keyPair.privateKey.toString(),decryptedUserPrivateKey).toString();
+                const grppublickey=keyPair.publicKey.toString();
+                const decrptuserPrivatekey=aes.decrypt(user.encryptedprivatekey,process.env.NEXTAUTH_SECRET).toString(Latin1);
+                const grpprivatekey=aes.encrypt(keyPair.privateKey,decrptuserPrivatekey).toString();
 
-                const newGrpr=Group.create({
+                const newGrpr=await Group.create({
                   name:request.name,
                   folderId:folder.data.id,
-                  publickey:keyPair.publicKey,
+                  publickey:grppublickey,
                   privatekey:grpprivatekey,
-                  userIds:user.id,
                   userEmails:user.email,
                   ownerId:user.id
                 })
-                const userupdate=User.findOneAndUpdate(
+                await User.findOneAndUpdate(
                     {email:user.email},
-                    {$push:{groupprikeys:{id:newGrpr._id,key:grpprivatekey}}})
+                    {$push:{groupprikeys:{id:newGrpr.name,key:grpprivatekey}}})
               })
     }
     catch(e){

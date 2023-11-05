@@ -11,20 +11,16 @@ export const POST=async(req)=>{
     try{
         await connect();
         
-        if(!await Group.exists({name:request.name})){
-            throw new Error ("no such grp found");
-        }
-        let exist=false;
-        const grp=await Group.findOne({name:request.name})
-        if(!grp.userEmails.includes(request.email)){
-            throw new Error("u r not authorised to view this grp");
-        }
+        
+        const grp=await Group.findOne({name:request.name});
+        if(grp===null || !grp.userEmails.includes(request.email))throw new Error ("no such grp found");
+        return Response.json(grp.userEmails);
     }
     catch(e){
         console.log(e)
         return Response.json('err',{status:500})
     }
-    return Response.json(grp.userEmails);
-    // return Response.json('ok');
+
+    return Response.json('ok');
     
 }

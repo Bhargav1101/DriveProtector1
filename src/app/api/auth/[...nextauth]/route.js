@@ -7,7 +7,7 @@ import aes from "crypto-js/aes";
 import axios from "axios";
 import User from "@/models/users";
 
-
+import Latin1 from "crypto-js/enc-latin1";
 
 const rsa = new RSA();
 
@@ -65,21 +65,20 @@ const authOptions = {
 
             rsa.generateKeyPair(async function (keyPair){
               
-              // const pk = keyPair.publicKey.split('\n');
-              // pk.shift();pk.pop();pk.pop();
-              // const mpk  =pk.join('\n');
+              
 
-              const userpublickey=keyPair.publicKey;
-              console.log("Private key from nextauth/routejs",keyPair.privateKey);
+              const userpublickey=keyPair.publicKey.toString();
+              
 
-              const userprivatekey=aes.encrypt(keyPair.privateKey.toString(),process.env.NEXTAUTH_SECRET).toString();
-
+              const userprivatekey=aes.encrypt(keyPair.privateKey,process.env.NEXTAUTH_SECRET).toString();
+            //  console.log(mppk,"ko");
+            //  console.log(aes.decrypt(userprivatekey,process.env.NEXTAUTH_SECRET).toString(Latin1)===mppk);
               const newUser=User.create({
                 email:user.email,
                 name:user.name,
                 id:user.id,
                 image:user.image,
-                publickey:userpublickey.toString(),
+                publickey:userpublickey,
                 encryptedprivatekey:userprivatekey,
                 groupprikeys:[],
                 folderId:foldrid.toString(),
@@ -93,7 +92,7 @@ const authOptions = {
           else{
             
             
-            const userupdate=User.findOneAndUpdate(
+            await User.findOneAndUpdate(
               {email:user.email},
               {access_token:account.access_token})
             }

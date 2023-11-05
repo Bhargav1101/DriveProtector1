@@ -17,8 +17,12 @@ export const POST=async(req)=>{
         await connect();
         const grp=await Group.findOne({name:request.name});
         const user1=await User.findOne({id:grp.ownerId});
+        if(grp===null || !grp.userEmails.includes(request.owner)){
+            throw new Error("grp doesnt exists");
+        }
+        
         // console.log(grp.folderId);
-        if(grp.userIds.length===1 && grp.userIds[0]===grp.ownerId){
+        if(grp.userEmails.length===1 && grp.userEmails[0]===request.owner){
             const deleteFolder = await axios.delete(
                 `https://www.googleapis.com/drive/v3/files/${grp.folderId}`,
                 {
@@ -29,8 +33,8 @@ export const POST=async(req)=>{
                     } 
                 }
               );
-              function notgrp(id,key){
-                return id!=grp._id;
+              function notgrp({id,key}){
+                return id!=grp.name;
               }
             const updatedkeys= user1.groupprikeys.filter(notgrp);
             await User.findOneAndUpdate({id:grp.ownerId},{groupprikeys:updatedkeys});

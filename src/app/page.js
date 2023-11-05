@@ -5,48 +5,24 @@ import axios from "axios"
 import Link from "next/link";
 import { useState } from "react";
 import { redirect } from "next/dist/server/api-utils";
-
-// function Ho() {
-//   async function func(){
-//     const req=await axios.get("/app/api/req");
-//     console.log(req);
-//   }
-//   return (
-//     <button onClick={func}>send</button>
-//   )
-// }
-
+import Navbar from "./Navbar/Navbar"
+import Home1 from "./Home/Home1.js"
+import { BrowserRouter,Routes,Route } from 'react-router-dom';
+import About from "./about/page.js"
+import Approach from "./approach/page.js";
+import Group from "./group/page.js"
+import File from "./[file]/page.js"
+import Download from "./download/page.js"
 
 
 export default function Home() {
    
-   const session=useSession();
-   const router=useRouter();
-   
-   // console.log(session.user.access_token);
-   function signout(){
-      // router.push("/api/login");
-      // router.push("https://accounts.google.com/Logout")
-      signOut();
-      
-      
-   }
-   if(session.status==="authenticated"){
 
-      return(<div>
-        u r authenticated
-        {session.data.user.email}
-        
-        <button onClick={()=>signout()}>logout</button>
-        
-        
-   </div>)}
-   else return(
-   <div>
-    not authenticated
-
-    <button onClick={()=>signIn("google")}>login</button>
-    </div>
+   return(
+      <>
+      <Navbar/>
+      <Home1/>
+      </>
    )
 
 }
